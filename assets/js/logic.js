@@ -77,21 +77,27 @@ function questionClick() {
     clockTick();
     // display new time on page
 
+    // flash right/wrong feedback on page for half a second
+
+    giveFeedback(false);
+
     // play "wrong" sound effect
     sfxWrong.play();
-
 
 
 
   } else if (event.target.id === questions[currentQuestionIndex].answer) {
     console.log("yup");
     // else 
+    // flash right/wrong feedback on page for half a second
+
+    giveFeedback(true)
     // play "right" sound effect
     sfxRight.play();
 
+
   }
 
-  // flash right/wrong feedback on page for half a second
 
   // move to next question
   currentQuestionIndex++;
@@ -106,6 +112,21 @@ function questionClick() {
     getQuestion();
 
   }
+
+}
+
+function giveFeedback(answer) {
+  if (answer) {
+    var displayText = "Right!";
+  } else {
+    var displayText = "Wrong!";
+  }
+  feedbackEl.textContent = displayText;
+  feedbackEl.setAttribute("class", "feedback start");
+  setTimeout(function () {
+    feedbackEl.setAttribute("class", "hide");
+    feedbackEl.textContent = "";
+  }, 500);
 
 }
 
