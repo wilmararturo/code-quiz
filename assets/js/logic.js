@@ -72,13 +72,11 @@ function getQuestion() {
 function questionClick() {
   // check if user guessed wrong
   if (event.target.id !== questions[currentQuestionIndex].answer) {
-    console.log("nope");
+
     // penalize time
     clockTick();
     // display new time on page
-
     // flash right/wrong feedback on page for half a second
-
     giveFeedback(false);
 
     // play "wrong" sound effect
@@ -87,10 +85,8 @@ function questionClick() {
 
 
   } else if (event.target.id === questions[currentQuestionIndex].answer) {
-    console.log("yup");
     // else 
     // flash right/wrong feedback on page for half a second
-
     giveFeedback(true)
     // play "right" sound effect
     sfxRight.play();
