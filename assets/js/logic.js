@@ -13,22 +13,26 @@ var initialsEl = document.getElementById("initials");
 var feedbackEl = document.getElementById("feedback");
 var startScreenEl = document.querySelector("#start-screen");
 var questionTitleEl = document.querySelector("#question-title");
+var endScreenEl = document.querySelector("#end-screen");
+var finalScoreEL = document.querySelector("#final-score");
 
 // sound effects
 var sfxRight = new Audio("assets/sfx/correct.wav");
 var sfxWrong = new Audio("assets/sfx/incorrect.wav");
 
-function quizTimer(secondsLeft) {
-  var timerInterval = setInterval(function () {
-    secondsLeft--;
-    timerEl.textContent = secondsLeft;
 
-    if (secondsLeft === 0) {
-      clearInterval(timerInterval);
+function quizTimer() {
+  timerId = setInterval(function () {
+    time--;
+    timerEl.textContent = time;
+    if (time === 0) {
+      clearInterval(timerId);
     }
 
   }, 1000);
+
 }
+
 
 function startQuiz() {
   // hide start screen
@@ -37,7 +41,7 @@ function startQuiz() {
   questionsEl.setAttribute("class", "start");
 
   // start timer
-  quizTimer(60);
+  quizInterval = setInterval(quizTimer(), 1000);
   // show starting time
 
   getQuestion();
@@ -70,63 +74,101 @@ function questionClick() {
   if (event.target.id !== questions[currentQuestionIndex].answer) {
     console.log("nope");
     // penalize time
-
+    clockTick();
     // display new time on page
 
     // play "wrong" sound effect
+    sfxWrong.play();
+
+
 
 
   } else if (event.target.id === questions[currentQuestionIndex].answer) {
     console.log("yup");
     // else 
     // play "right" sound effect
-
+    sfxRight.play();
 
   }
 
   // flash right/wrong feedback on page for half a second
 
   // move to next question
+  currentQuestionIndex++;
 
   // check if we've run out of questions
-  // quizEnd
-  // else 
-  // getQuestion
+  if (currentQuestionIndex >= questions.length) {
+    quizEnd();
+    // quizEnd
+  } else {
+    // else 
+    // getQuestion
+    getQuestion();
+
+  }
+
 }
 
 function quizEnd() {
   // stop timer
+  clearInterval(timerId);
 
   // show end screen
+  questionsEl.setAttribute("class", "hide");
+  endScreenEl.setAttribute("class", "start")
 
   // show final score
-
+  finalScoreEL.textContent = time;
   // hide questions section
 }
 
 function clockTick() {
   // update time
+  time -= 10;
 
   // check if user ran out of time
+  if (time === 0) {
+    quizEnd();
+  } else {
+    return;
+  }
 }
 
 function saveHighscore() {
   // get value of input box
-
+  myInitials = initialsEl.value;
   // make sure value wasn't empty
-  // get saved scores from localstorage, or if not any, set to empty array
+  if (myInitials) {
+    // get saved scores from localstorage, or if not any, set to empty array
+    var localHighScores = localStorage.getItem("highScores");
+    if (!localHighScores) {
+      var highScores = [];
 
-  // format new score object for current user
+    } else {
+      highScores = JSON.parse(localHighScores);
+    }
 
-  // save to localstorage
 
+    // format new score object for current user
+    var score = { myInitials, time };
+    highScores.push(score);
+    // save to localstorage
+    localStorage.setItem("highScores", JSON.stringify(highScores));
+
+  }
   // redirect to next page
+  window.location.href = "highscores.html";
 }
 
 function checkForEnter(event) {
   // check if event key is enter
-  // saveHighscore
+  if (event.keyCode === 13) {
+    // saveHighscore
+    saveHighscore();
+  }
 }
+
+finalScoreEL.addEventListener("keyup", checkForEnter);
 
 // user clicks button to submit initials
 submitBtn.onclick = saveHighscore;
