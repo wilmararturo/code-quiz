@@ -13,5 +13,5 @@ You score is equal to the time remaining at the end of the quiz.
 Click "Start Quiz" and answer the questions.  Each wrong answer will deduct ten seconds from the time remaining.
 
 
-![code quiz](./Assets/04-web-apis-homework-demo.gif)
+![code quiz](./Assets/CodingQuiz.gif)
 
